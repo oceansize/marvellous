@@ -1,4 +1,5 @@
 require "marvel_api"
+require "spec_helper"
 
 describe MarvelApi do
 
@@ -31,10 +32,14 @@ describe MarvelApi do
     end
   end
 
-  xcontext "when accessing 'Comics' resource" do
+  context "making get requests to an endpoint" do
+    it "returns the data" do
+      stub_request(:get, /gateway.marvel.com/).to_return(:body => '{"results": []}')
 
-    it "can retrieve a list of all comics" do
-      expect(MarvelApi.comics).to include("\"code\" => 200,")
+      MarvelApi.get_from('comics')
+
+      expect(WebMock).to have_requested(:get, /public\/comics/)
     end
   end
+
 end
